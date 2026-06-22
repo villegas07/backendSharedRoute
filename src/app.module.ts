@@ -1,10 +1,26 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { appConfig } from './config/app.config';
+import { databaseConfig } from './config/database.config';
+import { jwtConfig } from './config/jwt.config';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { VehiclesModule } from './modules/vehicles/vehicles.module';
+import { TripsModule } from './modules/trips/trips.module';
+import { BookingsModule } from './modules/bookings/bookings.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [appConfig, databaseConfig, jwtConfig],
+    }),
+    AuthModule,
+    UsersModule,
+    VehiclesModule,
+    TripsModule,
+    BookingsModule,
+  ],
 })
 export class AppModule {}
+
