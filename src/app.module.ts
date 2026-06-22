@@ -11,6 +11,8 @@ import { UsersModule } from './modules/users/users.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
 import { TripsModule } from './modules/trips/trips.module';
 import { BookingsModule } from './modules/bookings/bookings.module';
+import { DocumentsModule } from './modules/documents/documents.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { HealthController } from './shared/controllers/health.controller';
 
 @Module({
@@ -35,6 +37,8 @@ import { HealthController } from './shared/controllers/health.controller';
     AuthModule,
     UsersModule,
     VehiclesModule,
+    DocumentsModule,
+    SubscriptionsModule,
     TripsModule,
     BookingsModule,
   ],

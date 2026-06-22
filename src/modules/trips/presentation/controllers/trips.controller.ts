@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
+import { HasActiveSubscriptionGuard } from '../../../../shared/guards/has-active-subscription.guard';
 import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
 import { PublishTripUseCase } from '../../application/use-cases/publish-trip.use-case';
 import { PublishTripDto } from '../../application/dtos/publish-trip.dto';
@@ -20,8 +21,13 @@ export class TripsController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Publicar viaje', description: 'El conductor publica un nuevo viaje disponible.' })
+  @UseGuards(HasActiveSubscriptionGuard)
+  @ApiOperation({
+    summary: 'Publicar viaje',
+    description: 'Requiere suscripción activa. El conductor publica un nuevo viaje.',
+  })
   @ApiResponse({ status: 201, description: 'Viaje publicado.', type: TripResponseDto })
+  @ApiResponse({ status: 403, description: 'Sin suscripción activa.' })
   publish(
     @Body() dto: PublishTripDto,
     @CurrentUser() user: { sub: string },
@@ -30,8 +36,8 @@ export class TripsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Buscar viajes disponibles', description: 'Filtra viajes publicados por ciudad, fecha y asientos.' })
-  @ApiResponse({ status: 200, description: 'Lista de viajes disponibles.', type: [TripResponseDto] })
+  @ApiOperation({ summary: 'Buscar viajes disponibles' })
+  @ApiResponse({ status: 200, type: [TripResponseDto] })
   async findAvailable(@Query() filters: SearchTripsDto): Promise<TripResponseDto[]> {
     const trips = await this.tripRepository.findAvailable(filters);
     return TripMapper.toResponseList(trips);
