@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { UseCase } from '../../../../application/use-cases/use-case.interface';
 import { UserRepository } from '../../../users/domain/repositories/user.repository.interface';
 import { AuthResponseDto } from '../dtos/auth-response.dto';

@@ -5,6 +5,7 @@ import { GlobalExceptionFilter } from './shared/filters/http-exception.filter';
 import { ResponseInterceptor } from './shared/interceptors/response.interceptor';
 import { LoggingInterceptor } from './shared/interceptors/logging.interceptor';
 import { APP_CONSTANTS } from './shared/constants/app.constants';
+import { setupSwagger } from './docs/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,6 +28,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor(), new ResponseInterceptor());
+
+  setupSwagger(app);
 
   const port = parseInt(process.env.PORT ?? '3000', 10);
   await app.listen(port);

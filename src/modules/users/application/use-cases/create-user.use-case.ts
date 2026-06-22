@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { UseCase } from '../../../../application/use-cases/use-case.interface';
 import { APP_CONSTANTS } from '../../../../shared/constants/app.constants';
 import { UserEntity, UserRole } from '../../domain/entities/user.entity';

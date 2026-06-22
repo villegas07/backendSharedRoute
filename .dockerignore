@@ -1,0 +1,40 @@
+# Dependencias y compilación
+node_modules
+dist
+build
+
+# Control de versiones
+.git
+.gitignore
+
+# Variables de entorno (nunca al contenedor via contexto)
+.env
+.env.*
+!.env.example
+
+# Logs y cobertura
+logs
+*.log
+coverage
+.nyc_output
+
+# IDEs
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker (no recursivo)
+docker-compose*.yml
+Dockerfile*
+
+# Tests
+**/*.spec.ts
+**/*.e2e-spec.ts
+test/
