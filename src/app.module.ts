@@ -17,6 +17,7 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
 import { GeolocationModule } from './modules/geolocation/geolocation.module';
 import { NavigationModule } from './modules/navigation/navigation.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { SosModule } from './modules/sos/sos.module';
 import { HealthController } from './shared/controllers/health.controller';
 
 @Module({
@@ -48,6 +49,7 @@ import { HealthController } from './shared/controllers/health.controller';
     GeolocationModule,
     NavigationModule,
     ChatModule,
+    SosModule,
   ],
   controllers: [HealthController],
 })

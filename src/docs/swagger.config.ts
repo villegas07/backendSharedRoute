@@ -48,6 +48,7 @@ Authorization: Bearer <token>
     .addTag('geolocation', 'Geolocalización y búsqueda de lugares con Google Maps')
     .addTag('navigation', 'Navegación en tiempo real con WebSockets y Google Directions')
     .addTag('chat', 'Chat en vivo entre conductor y pasajeros (texto + imágenes)')
+    .addTag('sos', 'Módulo SOS: contactos de emergencia y alertas en tiempo real')
     .build();
 
   return SwaggerModule.createDocument(app, config);
