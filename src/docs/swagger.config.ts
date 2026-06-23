@@ -49,6 +49,7 @@ Authorization: Bearer <token>
     .addTag('navigation', 'Navegación en tiempo real con WebSockets y Google Directions')
     .addTag('chat', 'Chat en vivo entre conductor y pasajeros (texto + imágenes)')
     .addTag('sos', 'Módulo SOS: contactos de emergencia y alertas en tiempo real')
+    .addTag('reviews', 'Calificaciones con emojis y comentarios entre conductor y pasajero')
     .build();
 
   return SwaggerModule.createDocument(app, config);
