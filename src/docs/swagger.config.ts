@@ -52,6 +52,7 @@ Authorization: Bearer <token>
     .addTag('reviews', 'Calificaciones con emojis y comentarios entre conductor y pasajero')
     .addTag('trip-history', 'Historial de rutas realizadas para conductor y pasajero')
     .addTag('payments', 'Pagos de suscripciones con Wompi (pasarela de pagos colombiana)')
+    .addTag('support', 'Soporte y reporte de anomalías con chat integrado')
     .build();
 
   return SwaggerModule.createDocument(app, config);
