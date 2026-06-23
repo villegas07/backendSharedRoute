@@ -18,6 +18,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -181,6 +182,7 @@ export class DocumentsController {
 
   @Get('driver/:driverId')
   @UseGuards(IsAdminGuard)
+  @ApiParam({ name: 'driverId', description: 'UUID del conductor', type: 'string' })
   @ApiOperation({ summary: '[Admin] Ver documentos de un conductor' })
   @ApiResponse({ status: 200, type: [DocumentResponseDto] })
   findByDriver(@Param('driverId') driverId: string): Promise<DocumentResponseDto[]> {
@@ -191,6 +193,7 @@ export class DocumentsController {
 
   @Patch(':id/review')
   @UseGuards(IsAdminGuard)
+  @ApiParam({ name: 'id', description: 'UUID del documento', type: 'string' })
   @ApiOperation({ summary: '[Admin] Aprobar o rechazar un documento' })
   @ApiResponse({ status: 200, type: DocumentResponseDto })
   @ApiResponse({ status: 404, description: 'Documento no encontrado.' })
@@ -205,6 +208,7 @@ export class DocumentsController {
   // ── CRUD: Get by ID & Delete ──────────────────────────────────────────
 
   @Get(':id')
+  @ApiParam({ name: 'id', description: 'UUID del documento', type: 'string' })
   @ApiOperation({ summary: 'Obtener documento por ID' })
   @ApiResponse({ status: 200, type: DocumentResponseDto })
   @ApiResponse({ status: 404, description: 'Documento no encontrado.' })
@@ -214,8 +218,10 @@ export class DocumentsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Eliminar documento propio' })
+  @ApiParam({ name: 'id', description: 'UUID del documento', type: 'string' })
+  @ApiOperation({ summary: 'Eliminar documento propio', description: 'Borra el archivo físico y el registro.' })
   @ApiResponse({ status: 204, description: 'Documento eliminado.' })
+  @ApiResponse({ status: 403, description: 'El documento no te pertenece.' })
   delete(
     @Param('id') id: string,
     @CurrentUser() user: { sub: string },

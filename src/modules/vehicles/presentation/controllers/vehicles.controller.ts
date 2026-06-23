@@ -3,7 +3,7 @@ import {
   Param, Patch, Post, UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth, ApiOperation, ApiResponse, ApiTags,
+  ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
@@ -52,6 +52,7 @@ export class VehiclesController {
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', description: 'UUID del vehículo', type: 'string' })
   @ApiOperation({ summary: 'Obtener vehículo por ID' })
   @ApiResponse({ status: 200, type: VehicleResponseDto })
   @ApiResponse({ status: 404, description: 'Vehículo no encontrado.' })
@@ -60,8 +61,11 @@ export class VehiclesController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar vehículo' })
+  @ApiParam({ name: 'id', description: 'UUID del vehículo', type: 'string' })
+  @ApiOperation({ summary: 'Actualizar vehículo (solo propietario)' })
   @ApiResponse({ status: 200, type: VehicleResponseDto })
+  @ApiResponse({ status: 403, description: 'No eres el propietario.' })
+  @ApiResponse({ status: 404, description: 'Vehículo no encontrado.' })
   update(
     @Param('id') id: string,
     @Body() dto: UpdateVehicleDto,
@@ -72,8 +76,10 @@ export class VehiclesController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Eliminar vehículo' })
+  @ApiParam({ name: 'id', description: 'UUID del vehículo', type: 'string' })
+  @ApiOperation({ summary: 'Eliminar vehículo (solo propietario)' })
   @ApiResponse({ status: 204, description: 'Vehículo eliminado.' })
+  @ApiResponse({ status: 403, description: 'No eres el propietario.' })
   delete(
     @Param('id') id: string,
     @CurrentUser() user: { sub: string },

@@ -2,7 +2,7 @@ import {
   Body, Controller, Delete, Get, HttpCode, HttpStatus,
   Param, Patch, Post, Query, UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { HasActiveSubscriptionGuard } from '../../../../shared/guards/has-active-subscription.guard';
 import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
@@ -60,6 +60,7 @@ export class TripsController {
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', description: 'UUID del viaje', type: 'string' })
   @ApiOperation({ summary: 'Obtener viaje por ID' })
   @ApiResponse({ status: 200, type: TripResponseDto })
   @ApiResponse({ status: 404, description: 'Viaje no encontrado.' })
@@ -68,8 +69,11 @@ export class TripsController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar viaje (solo DRAFT o PUBLISHED)' })
+  @ApiParam({ name: 'id', description: 'UUID del viaje', type: 'string' })
+  @ApiOperation({ summary: 'Actualizar viaje (solo DRAFT o PUBLISHED)', description: 'Solo el conductor propietario puede actualizar.' })
   @ApiResponse({ status: 200, type: TripResponseDto })
+  @ApiResponse({ status: 400, description: 'El viaje no puede actualizarse en su estado actual.' })
+  @ApiResponse({ status: 403, description: 'No eres el conductor de este viaje.' })
   update(
     @Param('id') id: string,
     @Body() dto: UpdateTripDto,
@@ -80,8 +84,10 @@ export class TripsController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Cancelar viaje' })
+  @ApiParam({ name: 'id', description: 'UUID del viaje', type: 'string' })
+  @ApiOperation({ summary: 'Cancelar viaje', description: 'Devuelve el viaje con status CANCELLED.' })
   @ApiResponse({ status: 200, type: TripResponseDto })
+  @ApiResponse({ status: 403, description: 'No eres el conductor de este viaje.' })
   cancel(
     @Param('id') id: string,
     @CurrentUser() user: { sub: string },

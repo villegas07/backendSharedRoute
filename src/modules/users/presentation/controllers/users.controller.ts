@@ -12,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -53,6 +54,7 @@ export class UsersController {
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', description: 'UUID del usuario', type: 'string' })
   @ApiOperation({ summary: 'Obtener usuario por ID' })
   @ApiResponse({ status: 200, type: UserResponseDto })
   @ApiResponse({ status: 404, description: 'Usuario no encontrado.' })
@@ -61,7 +63,8 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar perfil de usuario', description: 'El usuario puede actualizar su propio perfil.' })
+  @ApiParam({ name: 'id', description: 'UUID del usuario', type: 'string' })
+  @ApiOperation({ summary: 'Actualizar perfil de usuario' })
   @ApiResponse({ status: 200, type: UserResponseDto })
   update(
     @Param('id') id: string,
@@ -73,6 +76,7 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiParam({ name: 'id', description: 'UUID del usuario', type: 'string' })
   @ApiOperation({ summary: 'Eliminar usuario' })
   @ApiResponse({ status: 204, description: 'Usuario eliminado.' })
   delete(@Param('id') id: string): Promise<void> {

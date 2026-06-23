@@ -7,11 +7,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiTags,
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
+import { GeocodedAddressResponseDto, PlacePredictionResponseDto } from '../../application/dtos/geocoded-address-response.dto';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { ReverseGeocodeUseCase } from '../../application/use-cases/reverse-geocode.use-case';
 import { SearchPlacesUseCase } from '../../application/use-cases/search-places.use-case';
@@ -37,13 +39,9 @@ export class GeolocationController {
   @Post('reverse-geocode')
   @ApiOperation({
     summary: 'Geocodificación inversa',
-    description:
-      'Convierte coordenadas (lat/lng) en una dirección legible. Útil para detectar automáticamente el punto de inicio.',
+    description: 'Convierte coordenadas (lat/lng) en una dirección legible. Útil para detectar automáticamente el punto de inicio.',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Dirección obtenida exitosamente',
-  })
+  @ApiResponse({ status: 200, type: GeocodedAddressResponseDto, description: 'Dirección obtenida exitosamente' })
   @ApiResponse({ status: 400, description: 'Coordenadas inválidas' })
   async reverseGeocode(@Body() dto: ReverseGeocodeDto) {
     return this.reverseGeocodeUseCase.execute(dto);
@@ -52,13 +50,9 @@ export class GeolocationController {
   @Get('search-places')
   @ApiOperation({
     summary: 'Buscar lugares',
-    description:
-      'Busca lugares por texto con autocompletado. Ideal para que el usuario defina su destino.',
+    description: 'Busca lugares por texto con autocompletado. Ideal para que el usuario defina su destino.',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de sugerencias de lugares',
-  })
+  @ApiResponse({ status: 200, type: [PlacePredictionResponseDto], description: 'Lista de sugerencias de lugares' })
   async searchPlaces(@Query() dto: SearchPlacesDto) {
     return this.searchPlacesUseCase.execute(dto);
   }
@@ -68,10 +62,7 @@ export class GeolocationController {
     summary: 'Geocodificar dirección',
     description: 'Convierte una dirección de texto en coordenadas geográficas.',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Coordenadas obtenidas exitosamente',
-  })
+  @ApiResponse({ status: 200, type: GeocodedAddressResponseDto, description: 'Coordenadas obtenidas exitosamente' })
   async geocodeAddress(@Query() dto: GeocodeAddressDto) {
     return this.geocodeAddressUseCase.execute(dto.address);
   }
@@ -79,13 +70,9 @@ export class GeolocationController {
   @Get('place-details')
   @ApiOperation({
     summary: 'Detalles de un lugar',
-    description:
-      'Obtiene información detallada de un lugar por su placeId de Google.',
+    description: 'Obtiene información detallada de un lugar por su placeId de Google.',
   })
-  @ApiResponse({
-    status: 200,
-    description: 'Detalles del lugar obtenidos exitosamente',
-  })
+  @ApiResponse({ status: 200, type: GeocodedAddressResponseDto, description: 'Detalles del lugar' })
   async getPlaceDetails(@Query() dto: PlaceDetailsDto) {
     return this.getPlaceDetailsUseCase.execute(dto.placeId);
   }

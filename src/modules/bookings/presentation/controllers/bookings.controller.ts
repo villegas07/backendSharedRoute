@@ -2,7 +2,7 @@ import {
   Body, Controller, Get, HttpCode, HttpStatus,
   Param, Patch, Post, UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
 import { CurrentUser } from '../../../../shared/decorators/current-user.decorator';
 import { CreateBookingUseCase } from '../../application/use-cases/create-booking.use-case';
@@ -47,6 +47,7 @@ export class BookingsController {
   }
 
   @Get(':id')
+  @ApiParam({ name: 'id', description: 'UUID de la reserva', type: 'string' })
   @ApiOperation({ summary: 'Obtener reserva por ID' })
   @ApiResponse({ status: 200, type: BookingResponseDto })
   @ApiResponse({ status: 404, description: 'Reserva no encontrada.' })
@@ -55,8 +56,10 @@ export class BookingsController {
   }
 
   @Patch(':id/cancel')
+  @ApiParam({ name: 'id', description: 'UUID de la reserva', type: 'string' })
   @ApiOperation({ summary: 'Cancelar reserva (pasajero)' })
   @ApiResponse({ status: 200, type: BookingResponseDto })
+  @ApiResponse({ status: 403, description: 'La reserva no te pertenece.' })
   cancelByPassenger(
     @Param('id') id: string,
     @CurrentUser() user: { sub: string },
@@ -69,6 +72,7 @@ export class BookingsController {
   }
 
   @Patch(':id/cancel-by-driver')
+  @ApiParam({ name: 'id', description: 'UUID de la reserva', type: 'string' })
   @ApiOperation({ summary: 'Cancelar reserva (conductor)' })
   @ApiResponse({ status: 200, type: BookingResponseDto })
   cancelByDriver(
