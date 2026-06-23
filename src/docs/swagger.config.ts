@@ -46,6 +46,7 @@ Authorization: Bearer <token>
     .addTag('trips', 'Publicación y búsqueda de viajes')
     .addTag('bookings', 'Reservas de asientos en viajes')
     .addTag('geolocation', 'Geolocalización y búsqueda de lugares con Google Maps')
+    .addTag('navigation', 'Navegación en tiempo real con WebSockets y Google Directions')
     .build();
 
   return SwaggerModule.createDocument(app, config);
