@@ -13,6 +13,7 @@ import {
   ApiTags,
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiQuery,
 } from '@nestjs/swagger';
@@ -22,6 +23,11 @@ import { EndNavigationUseCase } from '../../application/use-cases/end-navigation
 import { GetNavigationViewUseCase } from '../../application/use-cases/get-navigation-view.use-case';
 import { NavigationGateway } from '../gateways/navigation.gateway';
 import { StartNavigationDto } from '../../application/dtos/start-navigation.dto';
+import {
+  NavigationStartResponseDto,
+  DriverNavigationViewDto,
+  PassengerNavigationViewDto,
+} from '../../application/dtos/navigation-response.dto';
 
 @ApiTags('navigation')
 @ApiBearerAuth('access-token')
@@ -41,63 +47,47 @@ export class NavigationController {
     description:
       'El conductor inicia la navegación del viaje. Calcula la ruta con Google Directions y crea una sesión en tiempo real.',
   })
-  @ApiResponse({
-    status: 201,
-    description: 'Sesión de navegación creada exitosamente',
-  })
+  @ApiResponse({ status: 201, type: NavigationStartResponseDto, description: 'Sesión de navegación creada' })
   async startNavigation(
     @Body() dto: StartNavigationDto,
     @Req() req: { user?: { id?: string } },
   ) {
     const driverId = req.user?.id ?? '';
-    return this.startNavigationUseCase.execute({
-      ...dto,
-      driverId,
-    });
+    return this.startNavigationUseCase.execute({ ...dto, driverId });
   }
 
   @Get(':sessionId/driver')
+  @ApiParam({ name: 'sessionId', description: 'UUID de la sesión de navegación', type: 'string' })
   @ApiOperation({
     summary: 'Vista del conductor',
-    description:
-      'Obtiene la vista de navegación del conductor: ruta completa, paso actual, ETA y lista de pasajeros.',
+    description: 'Ruta completa, paso actual, ETA y lista de pasajeros.',
   })
-  @ApiResponse({ status: 200, description: 'Vista del conductor' })
+  @ApiResponse({ status: 200, type: DriverNavigationViewDto })
   async getDriverView(
     @Param('sessionId') sessionId: string,
     @Req() req: { user?: { id?: string } },
   ) {
-    return this.getViewUseCase.execute({
-      sessionId,
-      userId: req.user?.id ?? '',
-      role: 'DRIVER',
-    });
+    return this.getViewUseCase.execute({ sessionId, userId: req.user?.id ?? '', role: 'DRIVER' });
   }
 
   @Get(':sessionId/passenger')
+  @ApiParam({ name: 'sessionId', description: 'UUID de la sesión de navegación', type: 'string' })
   @ApiOperation({
     summary: 'Vista del pasajero',
-    description:
-      'Obtiene la vista del pasajero: ubicación del conductor en tiempo real, polyline de la ruta, ETA estimado.',
+    description: 'Ubicación del conductor en tiempo real, polyline de la ruta, ETA estimado.',
   })
-  @ApiResponse({ status: 200, description: 'Vista del pasajero' })
+  @ApiResponse({ status: 200, type: PassengerNavigationViewDto })
   async getPassengerView(
     @Param('sessionId') sessionId: string,
     @Req() req: { user?: { id?: string } },
   ) {
-    return this.getViewUseCase.execute({
-      sessionId,
-      userId: req.user?.id ?? '',
-      role: 'PASSENGER',
-    });
+    return this.getViewUseCase.execute({ sessionId, userId: req.user?.id ?? '', role: 'PASSENGER' });
   }
 
   @Patch(':sessionId/end')
-  @ApiOperation({
-    summary: 'Finalizar navegación',
-    description: 'El conductor finaliza la navegación al llegar al destino.',
-  })
-  @ApiResponse({ status: 200, description: 'Navegación finalizada' })
+  @ApiParam({ name: 'sessionId', description: 'UUID de la sesión de navegación', type: 'string' })
+  @ApiOperation({ summary: 'Finalizar navegación', description: 'El conductor finaliza al llegar al destino.' })
+  @ApiResponse({ status: 200, type: NavigationStartResponseDto, description: 'Sesión completada' })
   async endNavigation(
     @Param('sessionId') sessionId: string,
     @Req() req: { user?: { id?: string } },
@@ -106,7 +96,6 @@ export class NavigationController {
       sessionId,
       driverId: req.user?.id ?? '',
     });
-
     this.navigationGateway.broadcastSessionEnded(sessionId);
     return result;
   }

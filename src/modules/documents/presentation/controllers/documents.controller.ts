@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -15,6 +18,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOperation,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -25,6 +29,8 @@ import { CurrentUser } from '../../../../shared/decorators/current-user.decorato
 import { UploadDocumentUseCase } from '../../application/use-cases/upload-document.use-case';
 import { ReviewDocumentUseCase } from '../../application/use-cases/review-document.use-case';
 import { GetDriverDocumentsUseCase } from '../../application/use-cases/get-driver-documents.use-case';
+import { GetDocumentByIdUseCase } from '../../application/use-cases/get-document-by-id.use-case';
+import { DeleteDocumentUseCase } from '../../application/use-cases/delete-document.use-case';
 import { UploadSoatDto } from '../../application/dtos/upload-soat.dto';
 import { UploadLicenseDto } from '../../application/dtos/upload-license.dto';
 import { UploadCedulaDto } from '../../application/dtos/upload-cedula.dto';
@@ -56,6 +62,8 @@ export class DocumentsController {
     private readonly uploadDocumentUseCase: UploadDocumentUseCase,
     private readonly reviewDocumentUseCase: ReviewDocumentUseCase,
     private readonly getDriverDocumentsUseCase: GetDriverDocumentsUseCase,
+    private readonly getDocumentByIdUseCase: GetDocumentByIdUseCase,
+    private readonly deleteDocumentUseCase: DeleteDocumentUseCase,
   ) {}
 
   // ── SOAT ─────────────────────────────────────────────────────────────
@@ -174,6 +182,7 @@ export class DocumentsController {
 
   @Get('driver/:driverId')
   @UseGuards(IsAdminGuard)
+  @ApiParam({ name: 'driverId', description: 'UUID del conductor', type: 'string' })
   @ApiOperation({ summary: '[Admin] Ver documentos de un conductor' })
   @ApiResponse({ status: 200, type: [DocumentResponseDto] })
   findByDriver(@Param('driverId') driverId: string): Promise<DocumentResponseDto[]> {
@@ -184,6 +193,7 @@ export class DocumentsController {
 
   @Patch(':id/review')
   @UseGuards(IsAdminGuard)
+  @ApiParam({ name: 'id', description: 'UUID del documento', type: 'string' })
   @ApiOperation({ summary: '[Admin] Aprobar o rechazar un documento' })
   @ApiResponse({ status: 200, type: DocumentResponseDto })
   @ApiResponse({ status: 404, description: 'Documento no encontrado.' })
@@ -193,5 +203,29 @@ export class DocumentsController {
     @CurrentUser() user: { sub: string },
   ): Promise<DocumentResponseDto> {
     return this.reviewDocumentUseCase.execute({ documentId: id, adminId: user.sub, dto });
+  }
+
+  // ── CRUD: Get by ID & Delete ──────────────────────────────────────────
+
+  @Get(':id')
+  @ApiParam({ name: 'id', description: 'UUID del documento', type: 'string' })
+  @ApiOperation({ summary: 'Obtener documento por ID' })
+  @ApiResponse({ status: 200, type: DocumentResponseDto })
+  @ApiResponse({ status: 404, description: 'Documento no encontrado.' })
+  findById(@Param('id') id: string): Promise<DocumentResponseDto> {
+    return this.getDocumentByIdUseCase.execute(id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiParam({ name: 'id', description: 'UUID del documento', type: 'string' })
+  @ApiOperation({ summary: 'Eliminar documento propio', description: 'Borra el archivo físico y el registro.' })
+  @ApiResponse({ status: 204, description: 'Documento eliminado.' })
+  @ApiResponse({ status: 403, description: 'El documento no te pertenece.' })
+  delete(
+    @Param('id') id: string,
+    @CurrentUser() user: { sub: string },
+  ): Promise<void> {
+    return this.deleteDocumentUseCase.execute({ documentId: id, driverId: user.sub });
   }
 }

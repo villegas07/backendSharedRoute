@@ -6,6 +6,8 @@ import { DriverDocumentRepository } from './domain/repositories/driver-document.
 import { UploadDocumentUseCase } from './application/use-cases/upload-document.use-case';
 import { ReviewDocumentUseCase } from './application/use-cases/review-document.use-case';
 import { GetDriverDocumentsUseCase } from './application/use-cases/get-driver-documents.use-case';
+import { GetDocumentByIdUseCase } from './application/use-cases/get-document-by-id.use-case';
+import { DeleteDocumentUseCase } from './application/use-cases/delete-document.use-case';
 import { DriverDocumentRepositoryImpl } from './infrastructure/persistence/driver-document.repository';
 import { DocumentsController } from './presentation/controllers/documents.controller';
 import { FileStorageService } from '../../shared/storage/file-storage.service';
@@ -23,6 +25,8 @@ import { LocalFileStorageService } from '../../shared/storage/local-file-storage
     UploadDocumentUseCase,
     ReviewDocumentUseCase,
     GetDriverDocumentsUseCase,
+    GetDocumentByIdUseCase,
+    DeleteDocumentUseCase,
   ],
   exports: [DriverDocumentRepository],
 })
