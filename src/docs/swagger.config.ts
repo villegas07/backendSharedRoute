@@ -6,56 +6,9 @@ const SWAGGER_PATH = 'api/docs';
 export function buildSwaggerDocument(app: INestApplication): OpenAPIObject {
   const config = new DocumentBuilder()
     .setTitle('SharedRoute API')
-    .setDescription(
-      `
-## SharedRoute — Backend API
-
-Plataforma de carpooling que conecta conductores y pasajeros para compartir viajes.
-
----
-
-### Módulos disponibles
-
-| Módulo | Descripción |
-|--------|-------------|
-| **auth** | Registro, login y gestión de tokens JWT |
-| **users** | CRUD de perfiles de usuario |
-| **vehicles** | CRUD de vehículos del conductor |
-| **trips** | Publicación, búsqueda y gestión de viajes |
-| **bookings** | Reservas de asientos + cancelación |
-| **documents** | Subida y revisión de SOAT, Licencia y Cédula |
-| **subscriptions** | Planes y gestión de suscripciones del conductor |
-| **geolocation** | Geocodificación y búsqueda de lugares (Google Maps) |
-| **navigation** | Navegación en tiempo real vía WebSocket (/navigation) |
-| **chat** | Chat en vivo texto + imágenes vía WebSocket (/chat) |
-| **sos** | Alertas de emergencia y contactos de emergencia |
-| **reviews** | Calificaciones con emojis entre conductor y pasajero |
-| **trip-history** | Historial de rutas paginado y filtrable |
-| **payments** | Checkout de suscripciones con Wompi |
-| **support** | Tickets de soporte con chat integrado |
-
----
-
-### Autenticación
-Usa **Bearer JWT**. Obtén tu token en \`POST /api/v1/auth/login\` y agrégalo al header:
-\`\`\`
-Authorization: Bearer <token>
-\`\`\`
-
-### WebSockets
-- **Chat en vivo:** \`ws://<host>/chat\` — eventos: \`chat:join\`, \`chat:send-message\`, \`chat:typing\`, \`chat:history\`, \`chat:new-message\`
-- **Navegación:** \`ws://<host>/navigation\` — eventos: \`join-session\`, \`driver:update-location\`, \`driver:navigation-update\`, \`passenger:location-update\`
-- **SOS:** \`ws://<host>/sos\` — eventos: \`sos:alert-triggered\`, \`sos:alert-resolved\`
-
-### Reglas de negocio clave
-- El conductor debe tener **SOAT + Licencia + Cédula aprobados** antes de comprar una suscripción.
-- Solo los conductores con **suscripción activa** pueden publicar viajes.
-- Las **calificaciones** solo se pueden enviar cuando el viaje está **COMPLETADO**.
-- El **webhook de Wompi** valida la firma HMAC-SHA256 antes de procesar cualquier evento.
-      `,
-    )
+    .setDescription('API backend de SharedRoute — plataforma de carpooling colombiana.')
     .setVersion('1.0')
-    .setContact('SharedRoute Team', 'https://sharedroute.app', 'soporte@sharedroute.app')
+    .setContact('SharedRoute Team', '', 'soporte@sharedroute.app')
     .setLicense('UNLICENSED', '')
     .addBearerAuth(
       {
@@ -95,7 +48,7 @@ export function setupSwagger(app: INestApplication): void {
       persistAuthorization: true,
       tagsSorter: 'alpha',
       operationsSorter: 'alpha',
-      docExpansion: 'none',
+      docExpansion: 'list',
       filter: true,
       showRequestDuration: true,
       defaultModelsExpandDepth: 2,

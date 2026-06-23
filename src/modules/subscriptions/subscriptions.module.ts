@@ -19,6 +19,6 @@ import { SubscriptionsController } from './presentation/controllers/subscription
     PurchaseSubscriptionUseCase,
     GetMySubscriptionUseCase,
   ],
-  exports: [SubscriptionRepository],
+  exports: [SubscriptionRepository, SubscriptionPlanRepository],
 })
 export class SubscriptionsModule {}
