@@ -47,6 +47,7 @@ Authorization: Bearer <token>
     .addTag('bookings', 'Reservas de asientos en viajes')
     .addTag('geolocation', 'Geolocalización y búsqueda de lugares con Google Maps')
     .addTag('navigation', 'Navegación en tiempo real con WebSockets y Google Directions')
+    .addTag('chat', 'Chat en vivo entre conductor y pasajeros (texto + imágenes)')
     .build();
 
   return SwaggerModule.createDocument(app, config);
