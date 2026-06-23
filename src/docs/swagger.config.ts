@@ -45,6 +45,14 @@ Authorization: Bearer <token>
     .addTag('vehicles', 'Registro y administración de vehículos')
     .addTag('trips', 'Publicación y búsqueda de viajes')
     .addTag('bookings', 'Reservas de asientos en viajes')
+    .addTag('geolocation', 'Geolocalización y búsqueda de lugares con Google Maps')
+    .addTag('navigation', 'Navegación en tiempo real con WebSockets y Google Directions')
+    .addTag('chat', 'Chat en vivo entre conductor y pasajeros (texto + imágenes)')
+    .addTag('sos', 'Módulo SOS: contactos de emergencia y alertas en tiempo real')
+    .addTag('reviews', 'Calificaciones con emojis y comentarios entre conductor y pasajero')
+    .addTag('trip-history', 'Historial de rutas realizadas para conductor y pasajero')
+    .addTag('payments', 'Pagos de suscripciones con Wompi (pasarela de pagos colombiana)')
+    .addTag('support', 'Soporte y reporte de anomalías con chat integrado')
     .build();
 
   return SwaggerModule.createDocument(app, config);
