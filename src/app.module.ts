@@ -19,6 +19,7 @@ import { NavigationModule } from './modules/navigation/navigation.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { SosModule } from './modules/sos/sos.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { TripHistoryModule } from './modules/trip-history/trip-history.module';
 import { HealthController } from './shared/controllers/health.controller';
 
 @Module({
@@ -52,6 +53,7 @@ import { HealthController } from './shared/controllers/health.controller';
     ChatModule,
     SosModule,
     ReviewsModule,
+    TripHistoryModule,
   ],
   controllers: [HealthController],
 })

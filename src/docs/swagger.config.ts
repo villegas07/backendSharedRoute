@@ -50,6 +50,7 @@ Authorization: Bearer <token>
     .addTag('chat', 'Chat en vivo entre conductor y pasajeros (texto + imágenes)')
     .addTag('sos', 'Módulo SOS: contactos de emergencia y alertas en tiempo real')
     .addTag('reviews', 'Calificaciones con emojis y comentarios entre conductor y pasajero')
+    .addTag('trip-history', 'Historial de rutas realizadas para conductor y pasajero')
     .build();
 
   return SwaggerModule.createDocument(app, config);
