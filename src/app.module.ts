@@ -7,6 +7,7 @@ import { databaseConfig } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
 import { redisConfig } from './config/redis.config';
 import { googleMapsConfig } from './config/google-maps.config';
+import { wompiConfig } from './config/wompi.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
@@ -20,13 +21,14 @@ import { ChatModule } from './modules/chat/chat.module';
 import { SosModule } from './modules/sos/sos.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { TripHistoryModule } from './modules/trip-history/trip-history.module';
+import { PaymentModule } from './modules/payment/payment.module';
 import { HealthController } from './shared/controllers/health.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, jwtConfig, redisConfig, googleMapsConfig],
+      load: [appConfig, databaseConfig, jwtConfig, redisConfig, googleMapsConfig, wompiConfig],
     }),
     CacheModule.registerAsync({
       isGlobal: true,
@@ -54,6 +56,7 @@ import { HealthController } from './shared/controllers/health.controller';
     SosModule,
     ReviewsModule,
     TripHistoryModule,
+    PaymentModule,
   ],
   controllers: [HealthController],
 })
