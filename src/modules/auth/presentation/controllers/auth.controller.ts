@@ -1,17 +1,20 @@
-import { Body, Controller, Post, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Body, Controller, Post, Get, HttpCode, HttpStatus, UseGuards, Req, Res } from '@nestjs/common';
+import type { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { LoginUseCase } from '../../application/use-cases/login.use-case';
 import { RegisterUseCase } from '../../application/use-cases/register.use-case';
 import { LogoutUseCase } from '../../application/use-cases/logout.use-case';
 import { ForgotPasswordUseCase } from '../../application/use-cases/forgot-password.use-case';
 import { ResetPasswordUseCase } from '../../application/use-cases/reset-password.use-case';
+import { AuthResponseDto } from '../../application/dtos/auth-response.dto';
 import { LoginDto } from '../../application/dtos/login.dto';
 import { RegisterDto } from '../../application/dtos/register.dto';
 import { LogoutDto } from '../../application/dtos/logout.dto';
 import { ForgotPasswordDto } from '../../application/dtos/forgot-password.dto';
 import { ResetPasswordDto } from '../../application/dtos/reset-password.dto';
-import { AuthResponseDto } from '../../application/dtos/auth-response.dto';
 import { JwtAuthGuard } from '../../../../shared/guards/jwt-auth.guard';
+import { GoogleAuthGuard } from '../../../../shared/guards/google-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -22,6 +25,7 @@ export class AuthController {
     private readonly logoutUseCase: LogoutUseCase,
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
+    private readonly configService: ConfigService,
   ) {}
 
   @Post('register')
@@ -73,5 +77,28 @@ export class AuthController {
   @ApiResponse({ status: 400, description: 'Token inválido o expirado.' })
   resetPassword(@Body() dto: ResetPasswordDto): Promise<void> {
     return this.resetPasswordUseCase.execute(dto);
+  }
+
+  @Get('google')
+  @UseGuards(GoogleAuthGuard)
+  @ApiOperation({
+    summary: 'Iniciar sesión con Google',
+    description: 'Redirige al flujo de autenticación de Google OAuth2.',
+  })
+  @ApiResponse({ status: 302, description: 'Redirección a Google.' })
+  googleLogin(): void {
+    // Passport maneja la redirección automáticamente
+  }
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  @ApiExcludeEndpoint()
+  googleCallback(
+    @Req() req: { user: AuthResponseDto },
+    @Res() res: Response,
+  ): void {
+    const { accessToken, refreshToken } = req.user;
+    const frontendUrl = this.configService.get<string>('googleOauth.successRedirect');
+    res.redirect(`${frontendUrl}?accessToken=${accessToken}&refreshToken=${refreshToken}`);
   }
 }

@@ -8,6 +8,7 @@ import { jwtConfig } from './config/jwt.config';
 import { redisConfig } from './config/redis.config';
 import { googleMapsConfig } from './config/google-maps.config';
 import { wompiConfig } from './config/wompi.config';
+import { googleOauthConfig } from './config/google-oauth.config';
 import { smtpConfig } from './config/smtp.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
@@ -30,7 +31,7 @@ import { HealthController } from './shared/controllers/health.controller';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, jwtConfig, redisConfig, googleMapsConfig, wompiConfig, smtpConfig],
+      load: [appConfig, databaseConfig, jwtConfig, redisConfig, googleMapsConfig, wompiConfig, smtpConfig, googleOauthConfig],
     }),
     CacheModule.registerAsync({
       isGlobal: true,
