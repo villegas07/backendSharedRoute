@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { RefreshTokenRepository } from './domain/repositories/refresh-token.repository.interface';
@@ -11,6 +12,8 @@ import { ResetPasswordUseCase } from './application/use-cases/reset-password.use
 import { GoogleAuthUseCase } from './application/use-cases/google-auth.use-case';
 import { RefreshTokenRepositoryImpl } from './infrastructure/persistence/refresh-token.repository';
 import { PasswordResetTokenRepositoryImpl } from './infrastructure/persistence/password-reset-token.repository';
+import { RefreshTokenOrmEntity } from './infrastructure/persistence/entities/refresh-token.orm-entity';
+import { PasswordResetTokenOrmEntity } from './infrastructure/persistence/entities/password-reset-token.orm-entity';
 import { TokenService } from './infrastructure/strategies/token.service';
 import { GoogleStrategy } from './infrastructure/strategies/google.strategy';
 import { NodemailerEmailService } from './infrastructure/email/nodemailer-email.service';
@@ -21,6 +24,7 @@ import { AuthController } from './presentation/controllers/auth.controller';
   imports: [
     UsersModule,
     JwtModule.register({}),
+    TypeOrmModule.forFeature([RefreshTokenOrmEntity, PasswordResetTokenOrmEntity]),
   ],
   controllers: [AuthController],
   providers: [

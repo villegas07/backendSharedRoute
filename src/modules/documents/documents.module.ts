@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { MulterModule } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { UsersModule } from '../users/users.module';
@@ -9,6 +10,7 @@ import { GetDriverDocumentsUseCase } from './application/use-cases/get-driver-do
 import { GetDocumentByIdUseCase } from './application/use-cases/get-document-by-id.use-case';
 import { DeleteDocumentUseCase } from './application/use-cases/delete-document.use-case';
 import { DriverDocumentRepositoryImpl } from './infrastructure/persistence/driver-document.repository';
+import { DriverDocumentOrmEntity } from './infrastructure/persistence/entities/driver-document.orm-entity';
 import { DocumentsController } from './presentation/controllers/documents.controller';
 import { FileStorageService } from '../../shared/storage/file-storage.service';
 import { LocalFileStorageService } from '../../shared/storage/local-file-storage.service';
@@ -17,6 +19,7 @@ import { LocalFileStorageService } from '../../shared/storage/local-file-storage
   imports: [
     UsersModule,
     MulterModule.register({ storage: memoryStorage() }),
+    TypeOrmModule.forFeature([DriverDocumentOrmEntity]),
   ],
   controllers: [DocumentsController],
   providers: [
