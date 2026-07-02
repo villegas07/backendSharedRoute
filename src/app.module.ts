@@ -11,6 +11,7 @@ import { googleMapsConfig } from './config/google-maps.config';
 import { wompiConfig } from './config/wompi.config';
 import { googleOauthConfig } from './config/google-oauth.config';
 import { smtpConfig } from './config/smtp.config';
+import { InitialSchema1719878400000 } from './infrastructure/database/migrations/1719878400000-InitialSchema';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { VehiclesModule } from './modules/vehicles/vehicles.module';
@@ -44,10 +45,12 @@ import { HealthController } from './shared/controllers/health.controller';
           return {
             type: 'postgres' as const,
             url: databaseUrl,
-            synchronize: !isProduction,
+            synchronize: false,
             logging: !isProduction,
             autoLoadEntities: true,
             ssl: isProduction ? { rejectUnauthorized: false } : false,
+            migrations: [InitialSchema1719878400000],
+            migrationsRun: true,
           };
         }
         return {
@@ -60,6 +63,8 @@ import { HealthController } from './shared/controllers/health.controller';
           synchronize: configService.get<boolean>('database.synchronize'),
           logging: configService.get<boolean>('database.logging'),
           autoLoadEntities: true,
+          migrations: [InitialSchema1719878400000],
+          migrationsRun: true,
         };
       },
     }),
