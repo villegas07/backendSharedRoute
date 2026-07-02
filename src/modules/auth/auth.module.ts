@@ -20,6 +20,8 @@ import { NodemailerEmailService } from './infrastructure/email/nodemailer-email.
 import { EmailPort } from './application/ports/email.port';
 import { AuthController } from './presentation/controllers/auth.controller';
 
+const googleStrategyProviders = process.env.GOOGLE_CLIENT_ID ? [GoogleStrategy] : [];
+
 @Module({
   imports: [
     UsersModule,
@@ -32,7 +34,7 @@ import { AuthController } from './presentation/controllers/auth.controller';
     { provide: PasswordResetTokenRepository, useClass: PasswordResetTokenRepositoryImpl },
     { provide: EmailPort, useClass: NodemailerEmailService },
     TokenService,
-    GoogleStrategy,
+    ...googleStrategyProviders,
     LoginUseCase,
     RegisterUseCase,
     LogoutUseCase,
