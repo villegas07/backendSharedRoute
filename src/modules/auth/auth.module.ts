@@ -15,6 +15,7 @@ import { PasswordResetTokenRepositoryImpl } from './infrastructure/persistence/p
 import { RefreshTokenOrmEntity } from './infrastructure/persistence/entities/refresh-token.orm-entity';
 import { PasswordResetTokenOrmEntity } from './infrastructure/persistence/entities/password-reset-token.orm-entity';
 import { TokenService } from './infrastructure/strategies/token.service';
+import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
 import { GoogleStrategy } from './infrastructure/strategies/google.strategy';
 import { NodemailerEmailService } from './infrastructure/email/nodemailer-email.service';
 import { EmailPort } from './application/ports/email.port';
@@ -34,6 +35,7 @@ const googleStrategyProviders = process.env.GOOGLE_CLIENT_ID ? [GoogleStrategy] 
     { provide: PasswordResetTokenRepository, useClass: PasswordResetTokenRepositoryImpl },
     { provide: EmailPort, useClass: NodemailerEmailService },
     TokenService,
+    JwtStrategy,
     ...googleStrategyProviders,
     LoginUseCase,
     RegisterUseCase,
